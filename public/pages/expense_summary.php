@@ -59,7 +59,7 @@ foreach ($expenses as $expense) {
     <a href="?page=expense_summary&start_date=<?php echo $nextMonthStart; ?>&end_date=<?php echo $nextMonthEnd; ?>" class="p-2 bg-gray-500 text-white rounded ml-2">Next Month</a>
 </form>
 
-<div x-data="expenseManager()" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <?php if (empty($expenses)): ?>
         <div class="col-span-1 md:col-span-3 text-center text-gray-500">It seems no data found.</div>
     <?php else: ?>
@@ -84,18 +84,14 @@ foreach ($expenses as $expense) {
                         $rowCount = 0;
                         ?>
                         <?php foreach ($expenses as $expense): ?>
-                            <tr id="expense-<?php echo $expense['id']; ?>">
+                            <tr>
                                 <td class="py-3 px-4 border border-gray-300 whitespace-nowrap"><?php echo htmlspecialchars(date('j M', strtotime($expense['date']))); ?></td>
                                 <td class="py-3 px-4 border border-gray-300 whitespace-nowrap"><?php echo htmlspecialchars($expense['description'] ?? ''); ?></td>
                                 <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars($expense['budget_amount'] ?? ''); ?></td>
                                 <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars($expense['actual_amount'] ?? ''); ?></td>
                                 <td class="py-3 px-4 border border-gray-300">
-                                    <a href="javascript:void(0)" class="text-blue-500 hover:underline" @click="editExpense(<?php echo htmlspecialchars(json_encode($expense)); ?>)">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="javascript:void(0)" class="text-red-500 hover:underline" @click="deleteExpense(<?php echo $expense['id']; ?>)">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    <a href="?page=edit_expense&id=<?php echo $expense['id']; ?>" class="text-blue-500 hover:underline"><i class="fas fa-edit"></i></a>
+                                    <a href="?page=delete_expense&id=<?php echo $expense['id']; ?>" class="text-red-500 hover:underline"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                             <?php
@@ -127,105 +123,7 @@ foreach ($expenses as $expense) {
         </div>
         <?php endforeach; ?>
     <?php endif; ?>
-    
-    <!-- Modal for Editing Expense -->
-    <div x-show="modalOpen" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                        Edit Expense
-                    </h3>
-                    <div class="mt-2">
-                        <form @submit.prevent="submitEdit">
-                            <input type="hidden" x-model="expense.id" />
-                            <label for="budget_amount" class="block text-gray-700 text-sm font-bold mb-2">Budget Amount:</label>
-                            <input type="text" x-model="expense.budget_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            
-                            <label for="actual_amount" class="block text-gray-700 text-sm font-bold mb-2">Actual Amount:</label>
-                            <input type="text" x-model="expense.actual_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            
-                            <label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
-                            <input type="date" x-model="expense.date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            
-                            <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-                            <textarea x-model="expense.description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
-                            
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>
-                            <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" @click="modalOpen = false">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
-<script>
-    function expenseManager() {
-        return {
-            modalOpen: false,
-            expense: {},
-            editExpense(expense) {
-                this.expense = { ...expense }; // Spread syntax to create a copy of the expense
-                this.modalOpen = true;
-            },
-            submitEdit() {
-                const formData = new FormData();
-                formData.append('id', this.expense.id);
-                formData.append('budget_amount', this.expense.budget_amount);
-                formData.append('actual_amount', this.expense.actual_amount);
-                formData.append('date', this.expense.date);
-                formData.append('description', this.expense.description);
-                
-                fetch('update_expense_ajax.php', {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const row = document.getElementById(`expense-${this.expense.id}`);
-                        row.querySelector('td:nth-child(1)').innerText = new Date(this.expense.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                        row.querySelector('td:nth-child(2)').innerText = this.expense.description;
-                        row.querySelector('td:nth-child(3)').innerText = this.expense.budget_amount;
-                        row.querySelector('td:nth-child(4)').innerText = this.expense.actual_amount;
-                        this.modalOpen = false;
-                    } else {
-                        console.error('Failed to update expense:', data);
-                        alert('Failed to update expense.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while updating the expense.');
-                });
-            },
-            deleteExpense(expenseId) {
-                if (confirm('Are you sure you want to delete this expense?')) {
-                    fetch(`delete_expense_ajax.php?id=${expenseId}`, {
-                        method: 'GET',
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.getElementById(`expense-${expenseId}`).remove();
-                        } else {
-                            console.error('Failed to delete expense:', data);
-                            alert('Failed to delete expense.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while deleting the expense.');
-                    });
-                }
-            }
-        }
-    }
-</script>
-
 
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/footer.php';
