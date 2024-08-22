@@ -30,16 +30,9 @@ class Expense {
     }
 
     public function addExpense($userId, $categoryId, $budgetAmount, $actualAmount, $date, $description) {
-        $stmt = $this->db->prepare("INSERT INTO expenses (user_id, category_id, budget_amount, actual_amount, date, description, created_at, updated_at) 
-                                    VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->db->prepare("INSERT INTO expenses (user_id, category_id, budget_amount, actual_amount, date, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())");
         $stmt->bind_param("iiddss", $userId, $categoryId, $budgetAmount, $actualAmount, $date, $description);
-        
-        if ($stmt->execute()) {
-            // Return the last inserted ID
-            return $this->db->insert_id;
-        } else {
-            return false;
-        }
+        return $stmt->execute();
     }
 
     public function updateExpense($id, $category_id, $budget_amount, $actual_amount, $date, $description) {
@@ -68,7 +61,6 @@ class Expense {
         $stmt->execute();
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
-
     public function getExpensesByDateRange($userId, $startDate, $endDate) {
         $stmt = $this->db->prepare("SELECT expenses.*, categories.name as category_name 
                                     FROM expenses 
@@ -79,6 +71,9 @@ class Expense {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+    
+
 
     public function getExpenseDataByMonth($userId, $month) {
         $stmt = $this->db->prepare("SELECT * FROM expenses WHERE user_id = ? AND DATE_FORMAT(date, '%Y-%m') = ? AND deleted = 0");
