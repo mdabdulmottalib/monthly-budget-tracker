@@ -179,7 +179,7 @@ foreach ($expenses as $expense) {
                 formData.append('date', this.expense.date);
                 formData.append('description', this.expense.description);
                 
-                fetch('/path/to/update_expense_ajax.php', {
+                fetch('update_expense_ajax.php', {
                     method: 'POST',
                     body: formData,
                 })
@@ -200,7 +200,7 @@ foreach ($expenses as $expense) {
             },
             deleteExpense(expenseId) {
                 if (confirm('Are you sure you want to delete this expense?')) {
-                    fetch(`/path/to/delete_expense_ajax.php?id=${expenseId}`, {
+                    fetch(`delete_expense_ajax.php?id=${expenseId}`, {
                         method: 'GET',
                     })
                     .then(response => response.json())
