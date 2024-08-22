@@ -43,6 +43,11 @@ foreach ($expenses as $expense) {
 
 // Handle the form submission for adding an expense
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
+    // Set the content type to JSON if it's an AJAX request
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+    }
+
     $categoryName = $_POST['category_name'];
     $budgetAmount = $_POST['budget_amount'];
     $actualAmount = $_POST['actual_amount'];
@@ -72,9 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
         $lastInsertId = $expenseModel->addExpense($userId, $categoryId, $budgetAmount, $actualAmount, $date, $description);
 
         if ($lastInsertId) {
-            // If AJAX request, return JSON response
+            // Return JSON response if it's an AJAX request
             if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
-                header('Content-Type: application/json');
                 echo json_encode([
                     'success' => true,
                     'data' => [
@@ -89,13 +93,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
             }
         } else {
             // Handle error (e.g., database insert failed)
-            echo json_encode(['success' => false, 'error' => 'Failed to insert expense']);
-            exit;
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                echo json_encode(['success' => false, 'error' => 'Failed to insert expense']);
+                exit;
+            }
         }
     }
 }
 
 ?>
+
 
 <!-- Main Content -->
 <main class="col-start-2 col-end-3 row-start-2 row-end-3 pl-24">
