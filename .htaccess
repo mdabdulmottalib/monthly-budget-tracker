@@ -1,0 +1,19 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Set the base directory
+RewriteBase /public/
+
+# Redirect requests to the appropriate PHP files
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ $1.php [L,QSA]
+
+# Ensure access to necessary files
+<FilesMatch "\.(html|php|css|js|png|jpg|gif|ico|svg|webp)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Redirect root requests to public/index.php
+DirectoryIndex index.php

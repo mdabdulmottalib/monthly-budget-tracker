@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App Name - Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/2.5.1/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .sidebar-expanded {
+        width: 16rem;
+        padding: 0 15px;
+      }
+      .sidebar-collapsed {
+        width: 4rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* padding: 0 !important; */
+      }
+      .sidebar-collapsed .sidebar-text {
+        display: none;
+      }
+      .submenu {
+        display: none;
+      }
+      .submenu-open {
+        display: block;
+      }
+      .active {
+        background-color: #4a5568;
+      }
+      .MainNav {
+        display: flex;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 flex h-screen">
+    <aside
+      id="sidebar"
+      class="sidebar-expanded bg-white border-r text-white h-full transition-all duration-300"
+    >
+      <div class="flex justify-between items-center p-4">
+        <a
+          href="#"
+          class="text-lg font-bold sidebar-text text-gray-600 navListHeading"
+          >App Name</a
+        >
+        <button
+          onclick="toggleSidebar()"
+          class="text-white focus:outline-none bg-gray-700 size-8 flex items-center justify-center rounded-full"
+        >
+          <i class="fas fa-arrow-left" id="toggleIcon"></i>
+        </button>
+      </div>
+      <nav class="mt-10 flex flex-col main-nav-menu">
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-tachometer-alt"></i>
+          <span class="sidebar-text ml-3 listen">Dashboard</span>
+        </a>
+        <div
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center cursor-pointer menu-item text-gray-600"
+        >
+          <i class="fas fa-dollar-sign"></i>
+          <span class="sidebar-text ml-3 listen">Income</span>
+          <i class="fas fa-chevron-down ml-auto listen"></i>
+        </div>
+        <div id="income-submenu" class="submenu ml-10 mt-2">
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Add Income</span>
+          </a>
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Income History</span>
+          </a>
+        </div>
+        <div
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center cursor-pointer menu-item text-gray-600"
+        >
+          <i class="fas fa-receipt"></i>
+          <span class="sidebar-text ml-3 listen">Expenses</span>
+          <i class="fas fa-chevron-down ml-auto listen"></i>
+        </div>
+        <div id="expenses-submenu" class="submenu ml-10 mt-2">
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Add Expenses</span>
+          </a>
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Expenses History</span>
+          </a>
+        </div>
+        <div
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center cursor-pointer menu-item text-gray-600"
+        >
+          <i class="fas fa-sticky-note"></i>
+          <span class="sidebar-text ml-3 listen">Notes</span>
+          <i class="fas fa-chevron-down ml-auto listen"></i>
+        </div>
+        <div id="notes-submenu" class="submenu ml-10 mt-2">
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Add Note</span>
+          </a>
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Note History</span>
+          </a>
+        </div>
+        <div
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center cursor-pointer menu-item text-gray-600"
+        >
+          <i class="fas fa-calculator"></i>
+          <span class="sidebar-text ml-3 listen">Debt</span>
+          <i class="fas fa-chevron-down ml-auto listen"></i>
+        </div>
+        <div id="debt-submenu" class="submenu ml-10 mt-2">
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Add Debt</span>
+          </a>
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Debt Snowball Summary</span>
+          </a>
+          <a
+            href="#"
+            class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white text-gray-600"
+          >
+            <span class="sidebar-text listen">Debt Snowball Calculator</span>
+          </a>
+        </div>
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-user"></i>
+          <span class="sidebar-text ml-3 listen">Profile</span>
+        </a>
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-users"></i>
+          <span class="sidebar-text ml-3 listen">Users</span>
+        </a>
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-cogs"></i>
+          <span class="sidebar-text ml-3 listen">Settings</span>
+        </a>
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-shield-alt"></i>
+          <span class="sidebar-text ml-3 listen">Admin Dashboard</span>
+        </a>
+        <a
+          href="#"
+          class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white flex items-center text-gray-600"
+        >
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="sidebar-text ml-3 listen">Logout</span>
+        </a>
+      </nav>
+      <div class="absolute bottom-0 py-4 flex items-center space-x-2">
+        <img
+          class="w-10 h-10 rounded-full border"
+          src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg"
+          alt="Profile Image"
+        />
+        <div class="sidebar-text text-gray-600">
+          <span>Hello!</span><br />
+          <span>John Doe</span>
+        </div>
+      </div>
+    </aside>
+    <div class="flex-1 flex flex-col">
+      <header class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div>
+          <h1 class="text-xl font-semibold">Dashboard</h1>
+        </div>
+        <div class="flex items-center">
+          <button class="dropDown">
+            <img
+              class="w-10 h-10 rounded-full"
+              src="https://static.vecteezy.com/system/resources/thumbnails/004/899/680/small/beautiful-blonde-woman-with-makeup-avatar-for-a-beauty-salon-illustration-in-the-cartoon-style-vector.jpg"
+              alt="Profile Image"
+            />
+
+            <div
+              class="dropDownMenu border-2 shadow-xl bg-white flex flex-col p-4"
+            >
+              <h1
+                class="font-semibold w-full hover:bg-gray-700 hover:text-white text-gray-600 py-2 rounded-md"
+              >
+                View Profile
+              </h1>
+              <h1
+                class="font-semibold w-full hover:bg-gray-700 hover:text-white text-gray-600 py-2 rounded-md"
+              >
+                Log Out
+              </h1>
+            </div>
+          </button>
+        </div>
+      </header>
+      <main class="p-4 flex-1 overflow-y-auto">
+        <!-- Page content goes here -->
+      </main>
+    </div>
+
+    <style>
+      .dropDown {
+        position: relative;
+      }
+
+      .dropDownMenu {
+        display: none;
+      }
+
+      .dropDown:hover > .dropDownMenu {
+        display: block;
+        position: absolute;
+        width: 200px;
+        border-radius: 10px;
+        top: 100%;
+        right: 10px;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var menuItems = document.querySelectorAll(".menu-item");
+        menuItems.forEach(function (item) {
+          item.addEventListener("click", function () {
+            var submenu = this.nextElementSibling;
+            if (submenu && submenu.classList.contains("submenu")) {
+              submenu.classList.toggle("submenu-open");
+              menuItems.forEach(function (el) {
+                if (el !== item) {
+                  var otherSubmenu = el.nextElementSibling;
+                  if (
+                    otherSubmenu &&
+                    otherSubmenu.classList.contains("submenu")
+                  ) {
+                    otherSubmenu.classList.remove("submenu-open");
+                  }
+                }
+              });
+            }
+          });
+        });
+
+        // Highlight the active menu item
+        var activePage = "dashboard";
+        var links = document.querySelectorAll("nav a");
+        links.forEach(function (link) {
+          if (link.href.includes(activePage)) {
+            link.classList.add("active");
+          }
+        });
+
+        // Check sidebar state from localStorage
+        const sidebarState = localStorage.getItem("sidebarState");
+        const sidebar = document.getElementById("sidebar");
+        const mainNavMenu = document.querySelector(".main-nav-menu");
+        const navListHeading = document.querySelector(".navListHeading");
+        const allNavLinkText = document.querySelectorAll(".listen");
+
+        if (sidebarState === "collapsed") {
+          sidebar.classList.add("sidebar-collapsed");
+          mainNavMenu.classList.add("MainNav");
+          navListHeading.style.display = "none";
+          allNavLinkText.forEach((item) => {
+            item.style.display = "none";
+          });
+        } else {
+          sidebar.classList.add("sidebar-expanded");
+        }
+      });
+
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        const mainNavMenu = document.querySelector(".main-nav-menu");
+        const navListHeading = document.querySelector(".navListHeading");
+        const allNavLinkText = document.querySelectorAll(".listen");
+
+        if (sidebar.classList.contains("sidebar-expanded")) {
+          sidebar.classList.remove("sidebar-expanded");
+          sidebar.classList.add("sidebar-collapsed");
+          mainNavMenu.classList.add("MainNav");
+          navListHeading.style.display = "none";
+          allNavLinkText.forEach((item) => {
+            item.style.display = "none";
+          });
+          localStorage.setItem("sidebarState", "collapsed");
+        } else {
+          sidebar.classList.remove("sidebar-collapsed");
+          sidebar.classList.add("sidebar-expanded");
+          mainNavMenu.classList.remove("MainNav");
+          navListHeading.style.display = "block";
+          allNavLinkText.forEach((item) => {
+            item.style.display = "inline";
+          });
+          localStorage.setItem("sidebarState", "expanded");
+        }
+      }
+    </script>
+  </body>
+</html>
