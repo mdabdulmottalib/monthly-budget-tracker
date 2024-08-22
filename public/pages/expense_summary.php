@@ -1,11 +1,13 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/header.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Expense.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Category.php';
 
 Auth::checkRole([1, 2, 3]); // Allow Admin, Manager, and User roles
 Auth::checkSubscription(); // Check if user has an active subscription
 
 $expenseModel = new Expense();
+$categoryModel = new Category();
 $userId = $_SESSION['user']['id'];
 
 // Get current month start and end dates
@@ -38,7 +40,69 @@ foreach ($expenses as $expense) {
     $totalBudget += $expense['budget_amount'];
     $totalActual += $expense['actual_amount'];
 }
+
+// Handle the form submission for adding an expense
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
+    // Set the content type to JSON if it's an AJAX request
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+    }
+
+    $categoryName = $_POST['category_name'];
+    $budgetAmount = $_POST['budget_amount'];
+    $actualAmount = $_POST['actual_amount'];
+    $date = $_POST['date'];
+    $description = $_POST['description'];
+
+    // Add custom category if needed
+    if (isset($_POST['new_category']) && !empty($_POST['new_category'])) {
+        $newCategory = $_POST['new_category'];
+        if (!$categoryModel->categoryExists($newCategory, 'expense', $userId)) {
+            $categoryModel->addCategory($newCategory, 'expense', $userId);
+        }
+        $categoryName = $newCategory;
+    }
+
+    // Get category ID
+    $categories = $categoryModel->getCategoriesByType($userId, 'expense');
+    $categoryId = null;
+    foreach ($categories as $category) {
+        if ($category['name'] === $categoryName) {
+            $categoryId = $category['id'];
+            break;
+        }
+    }
+
+    if ($categoryId) {
+        $lastInsertId = $expenseModel->addExpense($userId, $categoryId, $budgetAmount, $actualAmount, $date, $description);
+
+        if ($lastInsertId) {
+            // Return JSON response if it's an AJAX request
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                echo json_encode([
+                    'success' => true,
+                    'data' => [
+                        'date' => date('j M', strtotime($date)),
+                        'description' => htmlspecialchars($description),
+                        'budget_amount' => number_format($budgetAmount, 2),
+                        'actual_amount' => number_format($actualAmount, 2),
+                        'id' => $lastInsertId
+                    ]
+                ]);
+                exit;
+            }
+        } else {
+            // Handle error (e.g., database insert failed)
+            if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                echo json_encode(['success' => false, 'error' => 'Failed to insert expense']);
+                exit;
+            }
+        }
+    }
+}
+
 ?>
+
 
 
 <!-- Main Content -->
@@ -158,105 +222,6 @@ foreach ($expenses as $expense) {
                   >
                     Save & Add More
                   </button>
-                  <?php
-require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/header.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Expense.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Category.php';
-
-Auth::checkRole([1, 2, 3]); // Allow Admin, Manager, and User roles
-Auth::checkSubscription(); // Check if user has an active subscription
-
-$categoryModel = new Category();
-$expenseModel = new Expense();
-$userId = $_SESSION['user']['id'];
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $categoryName = $_POST['category_name'];
-    $budgetAmount = $_POST['budget_amount'];
-    $actualAmount = $_POST['actual_amount'];
-    $date = $_POST['date'];
-    $description = $_POST['description'];
-
-    // Add custom category if needed
-    if (isset($_POST['new_category']) && !empty($_POST['new_category'])) {
-        $newCategory = $_POST['new_category'];
-        if (!$categoryModel->categoryExists($newCategory, 'expense', $userId)) {
-            $categoryModel->addCategory($newCategory, 'expense', $userId);
-        }
-        $categoryName = $newCategory;
-    }
-
-    // Get category ID
-    $categories = $categoryModel->getCategoriesByType($userId, 'expense');
-    $categoryId = null;
-    foreach ($categories as $category) {
-        if ($category['name'] === $categoryName) {
-            $categoryId = $category['id'];
-            break;
-        }
-    }
-
-    if ($categoryId) {
-        $expenseModel->addExpense($userId, $categoryId, $budgetAmount, $actualAmount, $date, $description);
-        header("Location: " . BASE_URL . "?page=expense_summary");
-        exit;
-    }
-}
-
-// Get default categories and user's custom categories
-$defaultCategories = $categoryModel->getCategoriesByType(1, 'expense'); // Default categories by user_id = 1
-$userCategories = $categoryModel->getCategoriesByType($userId, 'expense'); // Custom categories by the current user
-?>
-
-<h1 class="text-2xl font-semibold mb-6">Add Expense</h1>
-
-<form method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <label for="category_name" class="block text-gray-700 text-sm font-bold mb-2">Category:</label>
-    <select id="category_name" name="category_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-        <option value="">--Select Category--</option>
-        <?php foreach ($defaultCategories as $category): ?>
-            <option value="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></option>
-        <?php endforeach; ?>
-        <?php foreach ($userCategories as $category): ?>
-            <option value="<?php echo $category['name']; ?>"><?php echo $category['name']; ?></option>
-        <?php endforeach; ?>
-        <option value="Add New Category">Add New Category</option>
-    </select>
-    <div id="new_category_container" class="hidden">
-        <label for="new_category" class="block text-gray-700 text-sm font-bold mb-2">New Category:</label>
-        <input type="text" name="new_category" id="new_category" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-    </div>
-
-    <label for="budget_amount" class="block text-gray-700 text-sm font-bold mb-2">Budget Amount:</label>
-    <input type="text" name="budget_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-
-    <label for="actual_amount" class="block text-gray-700 text-sm font-bold mb-2">Actual Amount:</label>
-    <input type="text" name="actual_amount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-
-    <label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date:</label>
-    <input type="date" name="date" id="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-
-    <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-    <textarea name="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
-
-    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
-</form>
-
-<script>
-document.getElementById('category_name').addEventListener('change', function() {
-    if (this.value === 'Add New Category') {
-        document.getElementById('new_category_container').style.display = 'block';
-    } else {
-        document.getElementById('new_category_container').style.display = 'none';
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    var today = new Date();
-    var dateInput = document.getElementById('date');
-    dateInput.value = today.toISOString().split('T')[0];
-});
-</script>
                 </div>
               </div>
             </div>
