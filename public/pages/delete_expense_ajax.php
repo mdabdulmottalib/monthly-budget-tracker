@@ -4,12 +4,23 @@ ini_set('display_errors', 1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Expense.php';
 
-$expenseModel = new Expense();
-
-$expenseId = $_GET['id'];
-
-$success = $expenseModel->deleteExpense($expenseId);
-
 header('Content-Type: application/json');
-echo json_encode(['success' => $success]);
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $expenseModel = new Expense();
+
+    $expenseId = $_GET['id'];
+
+    // Execute the delete
+    $success = $expenseModel->deleteExpense($expenseId);
+
+    if ($success) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Database delete failed']);
+    }
+} else {
+    echo json_encode(['success' => false, 'error' => 'Invalid request']);
+}
+
 ?>
