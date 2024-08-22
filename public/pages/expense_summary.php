@@ -219,46 +219,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
                 </tr>
               </thead>
               <tbody class="divide-gray-100 border-t border-gray-100">
-                <?php
-                          $categoryTotalBudget = 0;
-                          $categoryTotalActual = 0;
-                          $rowCount = 0;
-                          ?>
-                <?php foreach ($expenses as $expense): ?>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">
-                    <?php echo htmlspecialchars(date('j M', strtotime($expense['date']))); ?>
-                  </td>
-                  <td class="px-6 py-4">
-                    <?php echo htmlspecialchars($expense['description'] ?? ''); ?>
-                  </td>
-                  <td class="px-6 py-4">
-                    <?php echo htmlspecialchars($expense['budget_amount'] ?? ''); ?>
-                  </td>
-                  <td class="px-6 py-4">
-                    <?php echo htmlspecialchars($expense['actual_amount'] ?? ''); ?>
-                  </td>
-                  <td class="px-6 py-4">
-                    <a href="?page=edit_expense&id=<?php echo $expense['id']; ?>" class="text-blue-500 hover:underline"><i class="fas fa-edit"></i></a>
-                    <a href="?page=delete_expense&id=<?php echo $expense['id']; ?>" class="text-red-500 hover:underline"><i class="fas fa-trash"></i></a>
-                  </td>
-                </tr>
-                <?php
-                              $categoryTotalBudget += $expense['budget_amount'];
-                              $categoryTotalActual += $expense['actual_amount'];
-                              $rowCount++;
-                              ?>
-                <?php endforeach; ?>
-                <?php for ($i = $rowCount; $i < 10; $i++): ?>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4">&nbsp;</td>
-                  <td class="px-6 py-4">&nbsp;</td>
-                  <td class="px-6 py-4">&nbsp;</td>
-                  <td class="px-6 py-4">&nbsp;</td>
-                  <td class="px-6 py-4">&nbsp;</td>
-                </tr>
-                <?php endfor; ?>
-              </tbody>
+    <?php foreach ($expenses as $expense): ?>
+    <tr class="hover:bg-gray-50">
+        <td class="px-6 py-4"><?php echo htmlspecialchars(date('j M', strtotime($expense['date']))); ?></td>
+        <td class="px-6 py-4"><?php echo htmlspecialchars($expense['description'] ?? ''); ?></td>
+        <td class="px-6 py-4"><?php echo htmlspecialchars($expense['budget_amount'] ?? ''); ?></td>
+        <td class="px-6 py-4"><?php echo htmlspecialchars($expense['actual_amount'] ?? ''); ?></td>
+        <td class="px-6 py-4">
+            <a href="#" class="text-red-500 hover:underline delete-expense" data-id="<?php echo $expense['id']; ?>"><i class="fas fa-trash"></i></a>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+</tbody>
+
               <tfoot class="bg-gray-50">
                 <tr class="font-semibold">
                   <td class="px-6 py-4" colspan="2">Total</td>
@@ -348,6 +321,38 @@ $(document).ready(function() {
             }
         });
     }
+});
+</script>
+
+<script>$(document).ready(function() {
+    // Handle delete action
+    $(document).on('click', '.delete-expense', function(e) {
+        e.preventDefault();
+        const row = $(this).closest('tr');
+        const expenseId = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this expense?')) {
+            $.ajax({
+                url: 'delete_expense.php', // The PHP file handling the deletion
+                type: 'POST',
+                data: { id: expenseId },
+                success: function(response) {
+                    const data = JSON.parse(response);
+                    if (data.success) {
+                        // Hide the row from the table
+                        row.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('AJAX Error: ' + error);
+                }
+            });
+        }
+    });
 });
 </script>
 
