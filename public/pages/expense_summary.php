@@ -168,7 +168,7 @@ foreach ($expenses as $expense) {
             modalOpen: false,
             expense: {},
             editExpense(expense) {
-                this.expense = expense;
+                this.expense = { ...expense }; // Spread syntax to create a copy of the expense
                 this.modalOpen = true;
             },
             submitEdit() {
@@ -193,10 +193,14 @@ foreach ($expenses as $expense) {
                         row.querySelector('td:nth-child(4)').innerText = this.expense.actual_amount;
                         this.modalOpen = false;
                     } else {
+                        console.error('Failed to update expense:', data);
                         alert('Failed to update expense.');
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating the expense.');
+                });
             },
             deleteExpense(expenseId) {
                 if (confirm('Are you sure you want to delete this expense?')) {
@@ -208,15 +212,20 @@ foreach ($expenses as $expense) {
                         if (data.success) {
                             document.getElementById(`expense-${expenseId}`).remove();
                         } else {
+                            console.error('Failed to delete expense:', data);
                             alert('Failed to delete expense.');
                         }
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the expense.');
+                    });
                 }
             }
         }
     }
 </script>
+
 
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/footer.php';
