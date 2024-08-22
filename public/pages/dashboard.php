@@ -81,144 +81,362 @@ try {
             <?php endforeach; ?>
         </select>
     </div>
-    <!-- Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="p-4 bg-green-500 text-white rounded shadow">
-            <h2>Total Income</h2>
-            <p>$<?php echo number_format($totalIncome, 2); ?></p>
+<!-- New cards -->
+<section
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-5 md:pl-24 gap-5"
+      >
+        <div
+          class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative"
+        >
+          <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
+            <i class="fa-solid fa-money-check-dollar"></i>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold">$<?php echo number_format($totalIncome, 2); ?></h2>
+            <h2 class="font-semibold text-lg">Total</h2>
+            <div class="h-1 w-full bg-blue-400"></div>
+          </div>
         </div>
-        <div class="p-4 bg-red-500 text-white rounded shadow">
-            <h2>Total Expenses</h2>
-            <p>$<?php echo number_format($totalExpenses, 2); ?></p>
-        </div>
-        <div class="p-4 bg-yellow-500 text-white rounded shadow">
-            <h2>Left to Spend</h2>
-            <p><?php echo $leftToSpend < 0 ? '-$' . number_format(abs($leftToSpend), 2) : '$' . number_format($leftToSpend, 2); ?></p>
-        </div>
-        <div class="p-4 bg-blue-500 text-white rounded shadow">
-            <h2>Left to Budget</h2>
-            <p><?php echo $leftToBudget < 0 ? '-$' . number_format(abs($leftToBudget), 2) : '$' . number_format($leftToBudget, 2); ?></p>
-        </div>
-    </div>
-    <!-- Graphs -->
-    <div class="grid gap-8 w-full mx-auto justify-between" style="grid-template-columns: 25% 50% 25%; grid-template-rows: 300px">
-        <!-- Income Overview Pie Chart -->
-        <div class="w-full border rounded-xl p-4">
-            <canvas id="incomeOverviewChart" width="auto" height="auto"></canvas>
-        </div>
-        <!-- Left to Budget vs Actual Expenses Bar Chart -->
-        <div class="w-full border rounded-xl p-4">
-            <canvas id="budgetVsActualChart" width="auto" height="auto"></canvas>
-        </div>
-        <!-- Doughnut Chart -->
-        <div class="w-full border rounded-xl p-4">
-            <canvas id="doughnutChart" width="auto" height="300" style="height: 250px"></canvas>
-        </div>
-    </div>
-    <!-- Notes -->
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold">Notes</h2>
-        <!-- Add Notes here -->
-    </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <div
+          class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative"
+        >
+          <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
+            <i class="fa-solid fa-money-check-dollar"></i>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold"><?php echo $leftToBudget < 0 ? '-$' . number_format(abs($leftToBudget), 2) : '$' . number_format($leftToBudget, 2); ?></h2>
+            <h2 class="font-semibold text-lg">Left To Budget</h2>
+            <div class="h-1 w-full bg-blue-400"></div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative"
+        >
+          <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
+            <i class="fa-solid fa-money-check-dollar"></i>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold">$<?php echo number_format($totalExpenses, 2); ?></h2>
+            <h2 class="font-semibold text-lg">Expenses</h2>
+            <div class="h-1 w-full bg-blue-400"></div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative"
+        >
+          <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
+            <i class="fa-solid fa-money-check-dollar"></i>
+          </div>
+          <div class="flex flex-col gap-2">
+            <h2 class="text-2xl font-bold"><?php echo $leftToSpend < 0 ? '-$' . number_format(abs($leftToSpend), 2) : '$' . number_format($leftToSpend, 2); ?></h2>
+            <h2 class="font-semibold text-lg">Left to Spend</h2>
+            <div class="h-1 w-full bg-blue-400"></div>
+          </div>
+        </div>
+      </section>
+
+ <!-- Main Content -->
+ <main class="p-5 md:pl-24">
+        <div
+          class="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:h-[100vh] lg:grid-rows-[350px_1fr_1fr] lg:grid-cols-4 xl:grid-cols-[350px_1fr_1fr_350px] gap-5"
+        >
+          <section
+            class="bg-white flex lg:row-start-1 lg:row-end-2 lg:col-start-1 lg:col-end-2 items-center justify-center p-5 rounded-xl border border-[#EFEFF4] shadow-sm"
+          >
+            <canvas id="myPieChart1"></canvas>
+          </section>
+
+          <section
+            class="bg-white p-5 h-full rounded-xl border border-[#EFEFF4] shadow-sm md:col-span-full lg:col-start-2 lg:row-start-1 lg:row-end-2 lg:col-end-4"
+          >
+            <div id="chart" class="w-full"></div>
+          </section>
+
+          <section
+            class="bg-white flex md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3 lg:row-start-1 lg:row-end-2 lg:col-start-4 lg:col-end-5 items-center justify-center p-5 rounded-xl border border-[#EFEFF4] shadow-sm"
+          >
+            <canvas id="myPieChart2"></canvas>
+          </section>
+
+          <section
+            class="bg-white flex md:col-span-full w-full overflow-hidden p-5 rounded-xl border border-[#EFEFF4] shadow-sm lg:row-start-2 lg:row-end-4 lg:col-start-1 lg:col-end-2"
+          >
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-start text-xs font-medium uppercase dark:text-neutral-500"
+                  >
+                    note
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-start text-xs font-medium uppercase dark:text-neutral-500"
+                  >
+                    budget
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Salary
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">20000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">19000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">1000</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Salary
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">20000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">19000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">1000</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section
+            class="bg-white rounded-xl md:col-span-full lg:row-start-2 lg:row-end-4 lg:col-start-2 lg:col-end-4 border border-[#EFEFF4] shadow-sm"
+          >
+            <h2 class="block text-center py-2 font-bold text-2xl">All</h2>
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section
+            class="bg-white rounded-xl md:col-span-full border border-[#EFEFF4] shadow-sm lg:col-start-4 lg:col-end-5"
+          >
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    State
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600"
+                    >
+                      <span
+                        class="h-1.5 w-1.5 rounded-full bg-green-600"
+                      ></span>
+                      Active
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section
+            class="bg-white rounded-xl md:col-span-full border border-[#EFEFF4] shadow-sm lg:col-start-4 lg:col-end-5 lg:row-start-3 lg:row-end-4"
+          >
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    State
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600"
+                    >
+                      <span
+                        class="h-1.5 w-1.5 rounded-full bg-green-600"
+                      ></span>
+                      Active
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </main>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 <script>
-    document.getElementById('monthSelect').addEventListener('change', function() {
-        const selectedMonth = this.value;
-        window.location.href = `dashboard.php?month=${selectedMonth}`;
-    });
+  // ApexCharts options and rendering
+  var options = {
+    series: [
+      {
+        name: "series1",
+        data: [31, 40, 28, 51, 42, 109, 100],
+      },
+      {
+        name: "series2",
+        data: [11, 32, 45, 32, 34, 52, 41],
+      },
+    ],
+    chart: {
+      height: 350,
+      type: "area",
+      toolbar: {
+        show: false, // Hides the chart's toolbar (top bar)
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+    },
+    xaxis: {
+      type: "datetime",
+      categories: [
+        "2018-09-19T00:00:00.000Z",
+        "2018-09-19T01:30:00.000Z",
+        "2018-09-19T02:30:00.000Z",
+        "2018-09-19T03:30:00.000Z",
+        "2018-09-19T04:30:00.000Z",
+        "2018-09-19T05:30:00.000Z",
+        "2018-09-19T06:30:00.000Z",
+      ],
+    },
+    tooltip: {
+      x: {
+        format: "dd/MM/yy HH:mm",
+      },
+    },
+  };
 
-    // Income Overview Pie Chart
-    const ctxIncomeOverview = document.getElementById('incomeOverviewChart').getContext('2d');
-    const incomeOverviewChart = new Chart(ctxIncomeOverview, {
-        type: 'pie',
-        data: {
-            labels: ['Income', 'Expenses'],
-            datasets: [{
-                data: [<?php echo $totalIncome; ?>, <?php echo $totalExpenses; ?>],
-                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top'
-                },
-                tooltip: {
-                    enabled: true
-                }
-            }
-        }
-    });
+  var chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
 
-    // Left to Budget vs Actual Expenses Bar Chart
-    const ctxBudgetVsActual = document.getElementById('budgetVsActualChart').getContext('2d');
-    const budgetVsActualChart = new Chart(ctxBudgetVsActual, {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode($categoryNames); ?>,
-            datasets: [{
-                label: 'Budget',
-                data: <?php echo json_encode($categoryBudgetAmounts); ?>,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }, {
-                label: 'Actual',
-                data: <?php echo json_encode($categoryActualAmounts); ?>,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top'
-                },
-                tooltip: {
-                    enabled: true
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+  // Chart.js Pie Charts Configuration
+  const data1 = {
+    labels: ["Red", "Blue", "Yellow"],
+    datasets: [
+      {
+        label: "My First Dataset",
+        data: [300, 50, 100],
+        backgroundColor: [
+          "rgb(255, 99, 132)",
+          "rgb(54, 162, 235)",
+          "rgb(255, 205, 86)",
+        ],
+        hoverOffset: 4,
+      },
+    ],
+  };
 
-    // Doughnut Chart
-    const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
-    const doughnutChart = new Chart(ctxDoughnut, {
-        type: 'doughnut',
-        data: {
-            labels: ['Income', 'Expenses'],
-            datasets: [{
-                data: [<?php echo $totalIncome; ?>, <?php echo $totalExpenses; ?>],
-                backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
-                borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-                borderWidth: 1
-            }]
+  const data2 = {
+    labels: ["Green", "Purple", "Orange"],
+    datasets: [
+      {
+        label: "My Second Dataset",
+        data: [200, 150, 250],
+        backgroundColor: [
+          "rgb(75, 192, 192)",
+          "rgb(153, 102, 255)",
+          "rgb(255, 159, 64)",
+        ],
+        hoverOffset: 4,
+      },
+    ],
+  };
+
+  const config1 = {
+    type: "pie",
+    data: data1,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false, // Hide the legend
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top'
-                },
-                tooltip: {
-                    enabled: true
-                }
-            }
-        }
+        tooltip: {
+          enabled: true,
+        },
+      },
+    },
+  };
+
+  const config2 = {
+    type: "pie",
+    data: data2,
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false, // Hide the legend
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+    },
+  };
+
+  // Render the first pie chart
+  const myPieChart1 = new Chart(
+    document.getElementById("myPieChart1"),
+    config1
+  );
+
+  // Render the second pie chart
+  const myPieChart2 = new Chart(
+    document.getElementById("myPieChart2"),
+    config2
+  );
+
+  // Handle other functionalities (e.g., sidebar menu toggle)
+  const menuButton = document.querySelectorAll(".menu-button");
+  const sideBarMenu = document.querySelector(".side-bar-menu");
+
+  menuButton.forEach((button) => {
+    button.addEventListener("click", () => {
+      sideBarMenu.classList.toggle("translate-x-0");
     });
+  });
 </script>
+
+
 
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/footer.php';
