@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Income.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/app/models/Expense.php';
 
 Auth::checkRole([1, 2, 3]);
+// Auth::checkSubscription();
 
 $incomeModel = new Income();
 $expenseModel = new Expense();
@@ -63,57 +64,11 @@ try {
     echo 'Error: ' . $e->getMessage();
     exit;
 }
+
 ?>
 
-<?php include 'aside.php'; ?>
-
-<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-5 md:pl-24 gap-5">
-    <div class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative">
-        <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
-            <i class="fa-solid fa-money-check-dollar"></i>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-2xl font-bold">$<?php echo number_format($totalIncome, 2); ?></h2>
-            <h2 class="font-semibold text-lg">Total Income</h2>
-            <div class="h-1 w-full bg-blue-400"></div>
-        </div>
-    </div>
-
-    <div class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative">
-        <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
-            <i class="fa-solid fa-money-check-dollar"></i>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-2xl font-bold">$<?php echo number_format($totalExpenses, 2); ?></h2>
-            <h2 class="font-semibold text-lg">Total Expenses</h2>
-            <div class="h-1 w-full bg-blue-400"></div>
-        </div>
-    </div>
-
-    <div class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative">
-        <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
-            <i class="fa-solid fa-money-check-dollar"></i>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-2xl font-bold"><?php echo $leftToSpend < 0 ? '-$' . number_format(abs($leftToSpend), 2) : '$' . number_format($leftToSpend, 2); ?></h2>
-            <h2 class="font-semibold text-lg">Left to Spend</h2>
-            <div class="h-1 w-full bg-blue-400"></div>
-        </div>
-    </div>
-
-    <div class="bg-white border shadow-sm h-40 rounded-xl flex flex-col justify-end p-8 relative">
-        <div class="absolute top-3 right-7 text-6xl text-gray-400 opacity-40">
-            <i class="fa-solid fa-money-check-dollar"></i>
-        </div>
-        <div class="flex flex-col gap-2">
-            <h2 class="text-2xl font-bold"><?php echo $leftToBudget < 0 ? '-$' . number_format(abs($leftToBudget), 2) : '$' . number_format($leftToBudget, 2); ?></h2>
-            <h2 class="font-semibold text-lg">Left to Budget</h2>
-            <div class="h-1 w-full bg-blue-400"></div>
-        </div>
-    </div>
-</section>
-
-<div class="container mx-auto p-5">
+<div class="container mx-auto">
+    <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
     <!-- Month Selector -->
     <div class="mb-4">
         <label for="monthSelect" class="font-bold">Select Month:</label>
@@ -126,7 +81,25 @@ try {
             <?php endforeach; ?>
         </select>
     </div>
-
+    <!-- Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="p-4 bg-green-500 text-white rounded shadow">
+            <h2>Total Income</h2>
+            <p>$<?php echo number_format($totalIncome, 2); ?></p>
+        </div>
+        <div class="p-4 bg-red-500 text-white rounded shadow">
+            <h2>Total Expenses</h2>
+            <p>$<?php echo number_format($totalExpenses, 2); ?></p>
+        </div>
+        <div class="p-4 bg-yellow-500 text-white rounded shadow">
+            <h2>Left to Spend</h2>
+            <p><?php echo $leftToSpend < 0 ? '-$' . number_format(abs($leftToSpend), 2) : '$' . number_format($leftToSpend, 2); ?></p>
+        </div>
+        <div class="p-4 bg-blue-500 text-white rounded shadow">
+            <h2>Left to Budget</h2>
+            <p><?php echo $leftToBudget < 0 ? '-$' . number_format(abs($leftToBudget), 2) : '$' . number_format($leftToBudget, 2); ?></p>
+        </div>
+    </div>
     <!-- Graphs -->
     <div class="grid gap-8 w-full mx-auto justify-between" style="grid-template-columns: 25% 50% 25%; grid-template-rows: 300px">
         <!-- Income Overview Pie Chart -->
@@ -142,7 +115,6 @@ try {
             <canvas id="doughnutChart" width="auto" height="300" style="height: 250px"></canvas>
         </div>
     </div>
-
     <!-- Notes -->
     <div class="mb-8">
         <h2 class="text-2xl font-bold">Notes</h2>
