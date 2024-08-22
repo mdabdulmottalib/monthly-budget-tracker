@@ -2,7 +2,7 @@
         class="-translate-x-60 md:translate-x-0 w-56 row-start-1 row-end-3 bg-white z-50 h-full fixed top-0 left-0 bottom-0 sm:w-20 transition-all duration-300 hover:w-56 group side-bar-menu"
       >
         <div class="absolute -right-3.5 top-6 z-50 md:hidden">
-          <a href="<?php echo BASE_URL; ?>?page=dashboard" href="<?php echo BASE_URL; ?>?page=dashboard"
+          <a href="<?php echo BASE_URL; ?>?page=dashboard"
             class="size-8 flex items-center justify-center rounded-full bg-blue-600 menu-button text-white"
           >
             <i class="fa-solid fa-x"></i>

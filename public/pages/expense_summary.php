@@ -59,71 +59,72 @@ foreach ($expenses as $expense) {
     <a href="?page=expense_summary&start_date=<?php echo $nextMonthStart; ?>&end_date=<?php echo $nextMonthEnd; ?>" class="p-2 bg-gray-500 text-white rounded ml-2">Next Month</a>
 </form>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="mt-10">
     <?php if (empty($expenses)): ?>
         <div class="col-span-1 md:col-span-3 text-center text-gray-500">It seems no data found.</div>
     <?php else: ?>
-        <?php foreach ($groupedExpenses as $category => $expenses): ?>
-        <div class="bg-white shadow-md rounded p-4">
-            <h2 class="text-xl font-semibold mb-4"><?php echo htmlspecialchars($category ?? ''); ?></h2>
-            <div class="overflow-y-auto" style="max-height: 400px;">
-                <table class="min-w-full bg-white border border-gray-300">
-                    <thead class="bg-gray-800 text-white sticky top-0">
-                        <tr>
-                            <th class="py-3 px-4 uppercase font-semibold text-sm border border-gray-300">Date</th>
-                            <th class="py-3 px-4 uppercase font-semibold text-sm border border-gray-300">Expense Name</th>
-                            <th class="py-3 px-4 uppercase font-semibold text-sm border border-gray-300">Budget</th>
-                            <th class="py-3 px-4 uppercase font-semibold text-sm border border-gray-300">Actual</th>
-                            <th class="py-3 px-4 uppercase font-semibold text-sm border border-gray-300">Actions</th>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <?php foreach ($groupedExpenses as $category => $expenses): ?>
+            <table class="w-full border-collapse bg-white text-left text-sm text-gray-500">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Date</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Expense Name</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Budget</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Actual</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-gray-900">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-gray-100 border-t border-gray-100">
+                    <?php
+                    $categoryTotalBudget = 0;
+                    $categoryTotalActual = 0;
+                    $rowCount = 0;
+                    ?>
+                    <?php foreach ($expenses as $expense): ?>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4"><?php echo htmlspecialchars(date('j M', strtotime($expense['date']))); ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($expense['description'] ?? ''); ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($expense['budget_amount'] ?? ''); ?></td>
+                            <td class="px-6 py-4"><?php echo htmlspecialchars($expense['actual_amount'] ?? ''); ?></td>
+                            <td class="px-6 py-4">
+                                <a href="?page=edit_expense&id=<?php echo $expense['id']; ?>" class="text-blue-500 hover:underline"><i class="fas fa-edit"></i></a>
+                                <a href="?page=delete_expense&id=<?php echo $expense['id']; ?>" class="text-red-500 hover:underline"><i class="fas fa-trash"></i></a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
                         <?php
-                        $categoryTotalBudget = 0;
-                        $categoryTotalActual = 0;
-                        $rowCount = 0;
+                        $categoryTotalBudget += $expense['budget_amount'];
+                        $categoryTotalActual += $expense['actual_amount'];
+                        $rowCount++;
                         ?>
-                        <?php foreach ($expenses as $expense): ?>
-                            <tr>
-                                <td class="py-3 px-4 border border-gray-300 whitespace-nowrap"><?php echo htmlspecialchars(date('j M', strtotime($expense['date']))); ?></td>
-                                <td class="py-3 px-4 border border-gray-300 whitespace-nowrap"><?php echo htmlspecialchars($expense['description'] ?? ''); ?></td>
-                                <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars($expense['budget_amount'] ?? ''); ?></td>
-                                <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars($expense['actual_amount'] ?? ''); ?></td>
-                                <td class="py-3 px-4 border border-gray-300">
-                                    <a href="?page=edit_expense&id=<?php echo $expense['id']; ?>" class="text-blue-500 hover:underline"><i class="fas fa-edit"></i></a>
-                                    <a href="?page=delete_expense&id=<?php echo $expense['id']; ?>" class="text-red-500 hover:underline"><i class="fas fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            <?php
-                            $categoryTotalBudget += $expense['budget_amount'];
-                            $categoryTotalActual += $expense['actual_amount'];
-                            $rowCount++;
-                            ?>
-                        <?php endforeach; ?>
-                        <?php for ($i = $rowCount; $i < 10; $i++): ?>
-                            <tr>
-                                <td class="py-3 px-4 border border-gray-300">&nbsp;</td>
-                                <td class="py-3 px-4 border border-gray-300">&nbsp;</td>
-                                <td class="py-3 px-4 border border-gray-300">&nbsp;</td>
-                                <td class="py-3 px-4 border border-gray-300">&nbsp;</td>
-                                <td class="py-3 px-4 border border-gray-300">&nbsp;</td>
-                            </tr>
-                        <?php endfor; ?>
-                    </tbody>
-                    <tfoot class="bg-gray-800 text-white sticky bottom-0">
-                        <tr class="font-semibold">
-                            <td class="py-3 px-4 border border-gray-300" colspan="2">Total</td>
-                            <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars(number_format($categoryTotalBudget, 2)); ?></td>
-                            <td class="py-3 px-4 border border-gray-300"><?php echo htmlspecialchars(number_format($categoryTotalActual, 2)); ?></td>
-                            <td class="py-3 px-4 border border-gray-300"></td>
+                    <?php endforeach; ?>
+                    <?php for ($i = $rowCount; $i < 10; $i++): ?>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4">&nbsp;</td>
+                            <td class="px-6 py-4">&nbsp;</td>
+                            <td class="px-6 py-4">&nbsp;</td>
+                            <td class="px-6 py-4">&nbsp;</td>
+                            <td class="px-6 py-4">&nbsp;</td>
                         </tr>
-                    </tfoot>
-                </table>
-            </div>
+                    <?php endfor; ?>
+                </tbody>
+                <tfoot class="bg-gray-50">
+                    <tr class="font-semibold">
+                        <td class="px-6 py-4" colspan="2">Total</td>
+                        <td class="px-6 py-4"><?php echo htmlspecialchars(number_format($categoryTotalBudget, 2)); ?></td>
+                        <td class="px-6 py-4"><?php echo htmlspecialchars(number_format($categoryTotalActual, 2)); ?></td>
+                        <td class="px-6 py-4"></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
     <?php endif; ?>
 </div>
+
+
+
+
 
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/public/layouts/footer.php';
