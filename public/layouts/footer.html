@@ -234,7 +234,162 @@
         </div>
       </section>
       <!-- Main Content -->
- 
+      <main class="p-5 md:pl-24">
+        <div
+          class="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:h-[100vh] lg:grid-rows-[350px_1fr_1fr] lg:grid-cols-4 xl:grid-cols-[350px_1fr_1fr_350px] gap-5"
+        >
+          <section
+            class="bg-white flex lg:row-start-1 lg:row-end-2 lg:col-start-1 lg:col-end-2 items-center justify-center p-5 rounded-xl border border-[#EFEFF4] shadow-sm"
+          >
+            <canvas id="myPieChart1"></canvas>
+          </section>
+
+          <section
+            class="bg-white p-5 h-full rounded-xl border border-[#EFEFF4] shadow-sm md:col-span-full lg:col-start-2 lg:row-start-1 lg:row-end-2 lg:col-end-4"
+          >
+            <div id="chart" class="w-full"></div>
+          </section>
+
+          <section
+            class="bg-white flex md:row-start-1 md:row-end-2 md:col-start-2 md:col-end-3 lg:row-start-1 lg:row-end-2 lg:col-start-4 lg:col-end-5 items-center justify-center p-5 rounded-xl border border-[#EFEFF4] shadow-sm"
+          >
+            <canvas id="myPieChart2"></canvas>
+          </section>
+
+          <section
+            class="bg-white flex md:col-span-full w-full overflow-hidden p-5 rounded-xl border border-[#EFEFF4] shadow-sm lg:row-start-2 lg:row-end-4 lg:col-start-1 lg:col-end-2"
+          >
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-start text-xs font-medium uppercase dark:text-neutral-500"
+                  >
+                    note
+                  </th>
+                  <th
+                    scope="col"
+                    class="px-6 py-3 text-start text-xs font-medium uppercase dark:text-neutral-500"
+                  >
+                    budget
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Salary
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">20000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">19000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">1000</td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    Salary
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">20000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">19000</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">1000</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section
+            class="bg-white rounded-xl md:col-span-full lg:row-start-2 lg:row-end-4 lg:col-start-2 lg:col-end-4 border border-[#EFEFF4] shadow-sm"
+          >
+            <h2 class="block text-center py-2 font-bold text-2xl">All</h2>
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section
+            class="bg-white rounded-xl md:col-span-full border border-[#EFEFF4] shadow-sm lg:col-start-4 lg:col-end-5"
+          >
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    State
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600"
+                    >
+                      <span
+                        class="h-1.5 w-1.5 rounded-full bg-green-600"
+                      ></span>
+                      Active
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section
+            class="bg-white rounded-xl md:col-span-full border border-[#EFEFF4] shadow-sm lg:col-start-4 lg:col-end-5 lg:row-start-3 lg:row-end-4"
+          >
+            <table
+              class="w-full border-collapse bg-white text-left text-sm text-gray-500"
+            >
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    Name
+                  </th>
+                  <th scope="col" class="px-6 py-4 font-medium text-gray-900">
+                    State
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-gray-100 border-t border-gray-100">
+                <tr class="hover:bg-gray-50">
+                  <!--  -->
+                  <td class="px-6 py-4">
+                    <span
+                      class="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-1 text-xs font-semibold text-green-600"
+                    >
+                      <span
+                        class="h-1.5 w-1.5 rounded-full bg-green-600"
+                      ></span>
+                      Active
+                    </span>
+                  </td>
+                  <td class="px-6 py-4">Product Designer</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
       </main>
     </div>
 

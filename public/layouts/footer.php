@@ -1,126 +1,158 @@
-</main>
-    </div>
-
-    <style>
-      .dropDown {
-        position: relative;
-      }
-
-      .dropDownMenu {
-        display: none;
-      }
-
-      .dropDown:hover > .dropDownMenu {
-        display: block;
-        position: absolute;
-        width: 200px;
-        border-radius: 10px;
-        top: 100%;
-        right: 10px;
-      }
-    </style>
-    <!-- modal -->
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.2.4/dist/cdn.min.js" defer></script>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var menuItems = document.querySelectorAll(".menu-item");
-        menuItems.forEach(function (item) {
-          item.addEventListener("click", function () {
-            var submenu = this.nextElementSibling;
-            if (submenu && submenu.classList.contains("submenu")) {
-              submenu.classList.toggle("submenu-open");
-              menuItems.forEach(function (el) {
-                if (el !== item) {
-                  var otherSubmenu = el.nextElementSibling;
-                  if (
-                    otherSubmenu &&
-                    otherSubmenu.classList.contains("submenu")
-                  ) {
-                    otherSubmenu.classList.remove("submenu-open");
-                  }
-                }
-              });
-            }
-          });
+      var options = {
+        series: [
+          {
+            name: "series1",
+            data: [31, 40, 28, 51, 42, 109, 100],
+          },
+          {
+            name: "series2",
+            data: [11, 32, 45, 32, 34, 52, 41],
+          },
+        ],
+        chart: {
+          height: 350,
+          type: "area",
+          toolbar: {
+            show: false,
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: "smooth",
+        },
+        xaxis: {
+          type: "datetime",
+          categories: [
+            "2018-09-19T00:00:00.000Z",
+            "2018-09-19T01:30:00.000Z",
+            "2018-09-19T02:30:00.000Z",
+            "2018-09-19T03:30:00.000Z",
+            "2018-09-19T04:30:00.000Z",
+            "2018-09-19T05:30:00.000Z",
+            "2018-09-19T06:30:00.000Z",
+          ],
+        },
+        tooltip: {
+          x: {
+            format: "dd/MM/yy HH:mm",
+          },
+        },
+      };
+
+      var chart = new ApexCharts(document.querySelector("#chart"), options);
+      chart.render();
+
+      const data1 = {
+        labels: ["Red", "Blue", "Yellow"],
+        datasets: [
+          {
+            label: "My First Dataset",
+            data: [300, 50, 100],
+            backgroundColor: [
+              "rgb(255, 99, 132)",
+              "rgb(54, 162, 235)",
+              "rgb(255, 205, 86)",
+            ],
+            hoverOffset: 4,
+          },
+        ],
+      };
+
+      const data2 = {
+        labels: ["Green", "Purple", "Orange"],
+        datasets: [
+          {
+            label: "My Second Dataset",
+            data: [200, 150, 250],
+            backgroundColor: [
+              "rgb(75, 192, 192)",
+              "rgb(153, 102, 255)",
+              "rgb(255, 159, 64)",
+            ],
+            hoverOffset: 4,
+          },
+        ],
+      };
+
+      const config1 = {
+        type: "pie",
+        data: data1,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Hide the legend
+            },
+            tooltip: {
+              enabled: true,
+            },
+          },
+        },
+      };
+
+      const config2 = {
+        type: "pie",
+        data: data2,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false, // Hide the legend
+            },
+            tooltip: {
+              enabled: true,
+            },
+          },
+        },
+      };
+
+      // Render the first pie chart
+      const myPieChart1 = new Chart(
+        document.getElementById("myPieChart1"),
+        config1
+      );
+
+      // Render the second pie chart
+      const myPieChart2 = new Chart(
+        document.getElementById("myPieChart2"),
+        config2
+      );
+
+      const months = new Date().getMonth(); // Get the current month (0-11)
+
+      // Array of month names
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const showMonth = document.getElementById("show-month");
+      showMonth.textContent = monthNames[months];
+
+      const menuButton = document.querySelectorAll(".menu-button");
+      const sideBarMenu = document.querySelector(".side-bar-menu");
+
+      menuButton.forEach((button) => {
+        button.addEventListener("click", () => {
+          sideBarMenu.classList.toggle("translate-x-0");
         });
-
-        // Highlight the active menu item
-        var activePage = '<?php echo $currentPage; ?>';
-        var links = document.querySelectorAll("nav a, .submenu a");
-        links.forEach(function (link) {
-          if (link.href.includes(activePage)) {
-            link.classList.add("active");
-          }
-        });
-
-        // Check sidebar state from localStorage
-        const sidebarState = localStorage.getItem("sidebarState");
-        const sidebar = document.getElementById("sidebar");
-        const mainNavMenu = document.querySelector(".main-nav-menu");
-        const navListHeading = document.querySelector(".navListHeading");
-        const allNavLinkText = document.querySelectorAll(".listen");
-
-        if (sidebarState === "collapsed") {
-          sidebar.classList.add("sidebar-collapsed");
-          mainNavMenu.classList.add("MainNav");
-          navListHeading.style.display = "none";
-          allNavLinkText.forEach((item) => {
-            item.style.display = "none";
-          });
-        } else {
-          sidebar.classList.add("sidebar-expanded");
-        }
       });
-
-      function toggleSidebar() {
-        const sidebar = document.getElementById("sidebar");
-        const mainNavMenu = document.querySelector(".main-nav-menu");
-        const navListHeading = document.querySelector(".navListHeading");
-        const allNavLinkText = document.querySelectorAll(".listen");
-
-        if (sidebar.classList.contains("sidebar-expanded")) {
-          sidebar.classList.remove("sidebar-expanded");
-          sidebar.classList.add("sidebar-collapsed");
-          mainNavMenu.classList.add("MainNav");
-          navListHeading.style.display = "none";
-          allNavLinkText.forEach((item) => {
-            item.style.display = "none";
-          });
-          localStorage.setItem("sidebarState", "collapsed");
-        } else {
-          sidebar.classList.remove("sidebar-collapsed");
-          sidebar.classList.add("sidebar-expanded");
-          mainNavMenu.classList.remove("MainNav");
-          navListHeading.style.display = "block";
-          allNavLinkText.forEach((item) => {
-            item.style.display = "inline";
-          });
-          localStorage.setItem("sidebarState", "expanded");
-        }
-      }
     </script>
-    <!-- Toggle end -->
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <!-- Bill Reminder Calendar -->
-       <script>
-        document.querySelectorAll('.checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    this.nextElementSibling.style.textDecoration = 'line-through';
-                    this.nextElementSibling.style.backgroundColor = '#D1D5DB';
-                } else {
-                    this.nextElementSibling.style.textDecoration = 'none';
-                    this.nextElementSibling.style.backgroundColor = 'transparent';
-                }
-            });
-        });
-    </script>
-    <!-- Bill Reminder End -->
-</body>
+  </body>
 </html>
-
-<?php
-// End output buffering and send the output
-ob_end_flush();
-?>
