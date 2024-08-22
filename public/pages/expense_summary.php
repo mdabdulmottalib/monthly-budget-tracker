@@ -47,17 +47,18 @@ foreach ($expenses as $expense) {
     <div
       class="flex flex-col gap-5 sm:flex-row w-full sm:justify-between sm:items-center"
     >
-      <h2 class="text-3xl font-medium">Budget</h2>
-      <div>
-    <h1 class="text-2xl font-semibold mb-6">Expense Summary</h1>
-
-    <div class="mb-6">
-        <div class="font-semibold">Total Expense Budget: <?php echo htmlspecialchars(number_format($totalBudget, 2)); ?></div>
-        <div class="font-semibold">Total Expenses: <?php echo htmlspecialchars(number_format($totalActual, 2)); ?></div>
+    <div>
+        <h2 class="text-3xl font-medium">Expense Summary</h2>
+        <div class="mb-6">
+            <div class="font-semibold">Total Expense Budget: <?php echo htmlspecialchars(number_format($totalBudget, 2)); ?></div>
+            <div class="font-semibold">Total Expenses: <?php echo htmlspecialchars(number_format($totalActual, 2)); ?></div>
+        </div>
     </div>
 
-    <!-- Filter Form -->
-    <form method="get" action="" class="mb-6">
+
+
+      <div class="flex gap-4 flex-col sm:flex-row items-start">
+      <form method="get" action="" class="mb-6">
         <input type="hidden" name="page" value="expense_summary">
         <label for="start_date" class="mr-2">Start Date:</label>
         <input type="date" id="start_date" name="start_date" value="<?php echo htmlspecialchars($startDate); ?>" class="mr-4 p-2 border rounded">
@@ -67,11 +68,6 @@ foreach ($expenses as $expense) {
         <a href="?page=expense_summary&start_date=<?php echo $prevMonthStart; ?>&end_date=<?php echo $prevMonthEnd; ?>" class="p-2 bg-gray-500 text-white rounded ml-2">Previous Month</a>
         <a href="?page=expense_summary&start_date=<?php echo $nextMonthStart; ?>&end_date=<?php echo $nextMonthEnd; ?>" class="p-2 bg-gray-500 text-white rounded ml-2">Next Month</a>
     </form>
-</div>
-      <div class="flex gap-4 flex-col sm:flex-row items-start">
-        <input type="date" name="" id="" />
-        <h2>To</h2>
-        <input type="date" name="" id="" />
       </div>
     </div>
     <div class="mt-10">
