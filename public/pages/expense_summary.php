@@ -86,7 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_expense'])) {
                         'description' => htmlspecialchars($description),
                         'budget_amount' => number_format($budgetAmount, 2),
                         'actual_amount' => number_format($actualAmount, 2),
-                        'id' => $lastInsertId
+                        'id' => $lastInsertId,
+                        'category_name' => htmlspecialchars($categoryName),
                     ]
                 ]);
                 exit;
