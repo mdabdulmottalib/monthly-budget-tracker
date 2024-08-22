@@ -67,20 +67,6 @@ try {
 
 ?>
 
-<div class="container mx-auto">
-    <h1 class="text-3xl font-bold mb-4">Dashboard</h1>
-    <!-- Month Selector -->
-    <div class="mb-4">
-        <label for="monthSelect" class="font-bold">Select Month:</label>
-        <select id="monthSelect" class="ml-2 p-2 border rounded">
-            <option value="all">All</option>
-            <?php foreach ($allMonths as $month): ?>
-                <option value="<?php echo $month; ?>" <?php echo $month === $selectedMonth ? 'selected' : ''; ?>>
-                    <?php echo date('F Y', strtotime($month)); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-    </div>
 <!-- New cards -->
 <section
         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 p-5 md:pl-24 gap-5"
